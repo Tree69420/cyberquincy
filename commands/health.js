@@ -1,3 +1,11 @@
+function getRamping(round) {
+    const r1 = 2, r2 = 5, r3 = 15;
+    if (round < 101) return ((round - 80) * r1);
+    if (round < 125) return (20*r1 + (round - 100) * r2);
+    if (round < 152) return (20*r1 + 24 * r2 + (round - 124) * r3);
+    return (20*r1+24*r2+27*r3 + (round - 151) * 35);
+}
+
 module.exports = {
     name: 'health',
     aliases: ['h', 'hp'],
@@ -30,17 +38,7 @@ module.exports = {
             return message.channel.send('please specify a blimp, e.g. ZOMG');
         }
         //percentage increase
-        let percentageIncrease;
-        if (round > 80 && round < 101) {
-            percentageIncrease = 1 + 0.02 * (round - 80);
-        } else if (round > 100 && round < 125) {
-            percentageIncrease = 1.4 + 0.05 * (round - 100);
-        } else if (round > 124 && round < 152) {
-            percentageIncrease = 2.65 + 0.2 * (round - 125);
-        } else if (round > 151) {
-            percentageIncrease = 8.05 + 0.5 * (round - 152);
-        }
-        let bhealth = Math.floor(baseHealth * percentageIncrease);
+        let bhealth = Math.floor(baseHealth * (1 + getRamping(round)/100);
 
         if (round > 80) {
             return message.channel.send(
